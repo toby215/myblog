@@ -85,13 +85,202 @@
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>全屏Hero区域</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#10B981',
+            accent: '#8B5CF6',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      }
+      .text-shadow-lg {
+        text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      }
+      .bg-overlay {
+        background-color: rgba(0,0,0,0.4);
+      }
+    }
+  </style>
+  
+  <style>
+    /* 基础样式 */
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* 打字机光标动画 */
+    .typed-cursor {
+      opacity: 1;
+      animation: blink 0.7s infinite;
+    }
+    
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 全屏Hero区域 -->
+  <section id="hero" class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <!-- 背景图片 -->
+    <div class="absolute inset-0 z-0">
+      <img 
+        src="pexels-pixabay-357159.jpg" 
+        alt="背景图片" 
+        class="w-full h-full object-cover"
+      >
+      <!-- 深色覆盖层，提升文字可读性 -->
+      <div class="absolute inset-0 bg-overlay"></div>
+    </div>
+    
+    <!-- Hero内容 -->
+    <div class="relative z-10 text-center px-4">
+      <!-- 网站名称 -->
+      <h1 id="site-name" class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white font-display mb-6 text-shadow-lg">
+        效听的快乐日记
+      </h1>
+      
+      <!-- 打字机效果副标题 -->
+      <div class="flex justify-center items-center">
+        <h2 id="typed-subtitle" class="text-[clamp(1.2rem,4vw,2.2rem)] text-white font-light mb-8 text-shadow min-h-[2.5rem]">
+          <!-- 打字机效果将在这里显示 -->
+        </h2>
+        <span class="typed-cursor text-white text-[clamp(1.2rem,4vw,2.2rem)] ml-1">|</span>
+      </div>
+      
+      <!-- 可选的行动按钮 -->
+      <a href="#content" class="inline-block bg-primary hover:bg-primary/90 text-white font-medium px-8 py-3 rounded-lg transition-all transform hover:scale-105 shadow-lg">
+        开始探索 <i class="fa fa-arrow-right ml-2"></i>
+      </a>
+    </div>
+    
+    <!-- 向下滚动指示器 -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <a href="#content" class="text-white text-2xl opacity-80 hover:opacity-100 transition-opacity">
+        <i class="fa fa-chevron-down"></i>
+      </a>
+    </div>
+  </section>
+  
+  <!-- 页面其他内容 -->
+  <section id="content" >
+
+  </section>
+
+  <script>
+    // 打字机效果实现
+    document.addEventListener('DOMContentLoaded', function() {
+      // 可自定义的打字内容数组
+      const texts = [
+        "今日事今日毕，明日事早规划",
+        "认真对待每一个今天",
+        "为目标全力以赴",
+        "日拱一卒，功不唐捐",
+	"生活即修行，当下即永恒"
+      ];
+      
+      const typedElement = document.getElementById('typed-subtitle');
+      let textIndex = 0; // 当前显示的文本索引
+      let charIndex = 0; // 当前显示的字符索引
+      let isDeleting = false; // 是否处于删除状态
+      let isEnd = false; // 是否完成一轮
+      
+      // 打字速度控制 (毫秒)
+      const typingSpeed = 150;    // 打字速度
+      const deletingSpeed = 75;   // 删除速度
+      const pauseAfterTyping = 1500; // 打完后停顿时间
+      const pauseAfterDeleting = 500; // 删除完后停顿时间
+      
+      // 打字机核心函数
+      function type() {
+        const currentText = texts[textIndex];
+        const speed = isDeleting ? deletingSpeed : typingSpeed;
+        
+        // 打字逻辑
+        if (isDeleting) {
+          // 删除字符
+          typedElement.textContent = currentText.substring(0, charIndex - 1);
+          charIndex--;
+        } else {
+          // 添加字符
+          typedElement.textContent = currentText.substring(0, charIndex + 1);
+          charIndex++;
+        }
+        
+        // 检查是否正在打字且未完成
+        if (!isDeleting && charIndex === currentText.length) {
+          isEnd = true;
+          isDeleting = true;
+          // 打完后停顿
+          setTimeout(type, pauseAfterTyping);
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          // 切换到下一个文本
+          textIndex = (textIndex + 1) % texts.length;
+          // 删除完后停顿
+          setTimeout(type, pauseAfterDeleting);
+        } else {
+          // 继续打字或删除
+          setTimeout(type, speed);
+        }
+      }
+      
+      // 开始打字效果
+      setTimeout(type, 500);
+      
+      // 平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+
   <!-- 顶部导航栏 -->
   <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm">
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <!-- 博客Logo -->
       <a href="https://toby215.github.io/myblog/" class="flex items-center space-x-2">
         <span class="text-accent text-2xl"><i class="fa fa-leaf"></i></span>
-        <span class="font-bold text-xl text-primary">Butterfly</span>
+        <span class="font-bold text-xl text-primary">Xiaoting</span>
       </a>
       
       <!-- 桌面端导航菜单 -->
@@ -132,19 +321,7 @@
   <main class="container mx-auto px-4 pt-24 pb-16 flex flex-col md:flex-row gap-8">
     <!-- 左侧文章列表 -->
     <section class="w-full md:w-2/3 lg:w-3/4">
-      <!-- 欢迎区域 -->
-      <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-8 text-white mb-8 shadow-lg">
-        <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-3 text-shadow">欢迎来到我的博客</h1>
-        <p class="text-blue-100 text-lg mb-6 max-w-2xl">分享技术、生活与思考，记录成长的点滴。</p>
-        <div class="flex space-x-4">
-          <a href="#articles" class="bg-white text-blue-600 px-5 py-2 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-            浏览文章
-          </a>
-          <a href="#about" class="bg-transparent border-2 border-white text-white px-5 py-2 rounded-lg font-medium hover:bg-white/10 transition-colors">
-            了解更多
-          </a>
-        </div>
-      </div>
+
       
       <!-- 文章列表 -->
       <section id="articles" class="mb-10">
@@ -519,4 +696,3 @@
   </script>
 </body>
 </html>
-
