@@ -578,34 +578,7 @@
             <li class="flex items-center"><i class="fa fa-envelope-o mr-2"></i> 335839950@qq.com</li>
             <li class="flex items-center"><i class="fa fa-map-marker mr-2"></i> 吉林省长春市</li>
             <li class="flex items-center"><i class="fa fa-weixin mr-2"></i> weixinID: YEAH----VVVV</li>
-			    // 简单的交互：打开/关闭二维码弹窗
-    (function(){
-      const wechatBtn = document.getElementById('wechat-open');
-      const qrModal = document.getElementById('qr-modal');
-      const qrClose = document.getElementById('qr-close');
-
-      function openQR(){
-        qrModal.classList.add('open');
-        qrModal.setAttribute('aria-hidden','false');
-      }
-      function closeQR(){
-        qrModal.classList.remove('open');
-        qrModal.setAttribute('aria-hidden','true');
-      }
-
-      wechatBtn.addEventListener('click', openQR);
-      qrModal.addEventListener('click', function(e){
-        // 点击模态背景或关闭文字均关闭
-        if (e.target === qrModal || e.target === qrClose) closeQR();
-      });
-      document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape') closeQR();
-      });
-
-      // 可选：如果希望点击图片不关闭（防止误触），阻止冒泡
-      document.getElementById('qr-image').addEventListener('click', function(e){
-        e.stopPropagation();
-      });
+			 
           </ul>
         </div>
       </div>
