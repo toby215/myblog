@@ -3,97 +3,215 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>文章</title>
+  <title>2023 年前端开发最佳实践与技能优化技巧</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --max-width:900px;
-      --accent:#1f6feb;
-      --bg:#f7f7f8;
+      --bg:#f6f7fb;
       --card:#ffffff;
-      --text:#222;
-      --muted:#6b7280;
-      --radius:14px;
-      --hero-height:48vh;
+      --muted:#7b7f87;
+      --accent:#6366f1; /* 柔和主色 */
+      --max-width:900px;
+      --radius:16px;
+      --shadow: 0 8px 30px rgba(21,24,40,0.06);
     }
     *{box-sizing:border-box}
-    body{font-family: -apple-system,BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; margin:0; background:var(--bg); color:var(--text);}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#fafbff 0%, #f6f7fb 100%);
+      color:#111827;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.7;
+      padding:32px 16px;
+      display:flex;
+      justify-content:center;
+    }
+    .container{
+      width:100%;
+      max-width:var(--max-width);
+      background:transparent;
+    }
 
-    /* 顶部英雄图区域 */
+    /* 返回按钮 */
+    .back-btn{
+      position:fixed;
+      left:20px;
+      top:20px;
+      z-index:60;
+      background:rgba(255,255,255,0.9);
+      border-radius:12px;
+      padding:8px 10px;
+      box-shadow: var(--shadow);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:#111;
+      font-weight:600;
+    }
+    .back-btn svg{width:18px;height:18px;display:block}
+
+    /* 顶部大图（Hero） */
     .hero{
       position:relative;
-      height:var(--hero-height);
-      min-height:280px;
+      height:360px;
+      border-radius:var(--radius);
+      overflow:hidden;
+      background-size:cover;
+      background-position:center;
+      box-shadow: var(--shadow);
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(5,6,10,0.12) 0%, rgba(5,6,10,0.04) 40%, rgba(255,255,255,0.15) 100%);
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:absolute;
+      inset:0;
       display:flex;
       align-items:center;
       justify-content:center;
-      overflow:hidden;
-      border-bottom-left-radius:var(--radius);
-      border-bottom-right-radius:var(--radius);
-      margin:24px auto 12px;
-      max-width:calc(var(--max-width) + 48px);
-      background:#111;
+      padding:24px;
+      text-align:center;
     }
-    .hero__img{
-      position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.03); filter:brightness(0.6) saturate(0.95);
-    }
-    .hero__overlay{
-      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:16px;
-    }
-    .hero__title{
-      color:#fff; text-align:center; font-size:clamp(20px,4vw,40px); line-height:1.05; font-weight:700; text-shadow:0 6px 20px rgba(0,0,0,0.45); max-width:85%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.02)); padding:12px 18px; border-radius:10px;
+    .title{
+      color:white;
+      text-shadow: 0 6px 24px rgba(4,6,12,0.45);
+      font-size:32px;
+      font-weight:700;
+      line-height:1.05;
+      max-width:80%;
     }
 
-    /* 文章主体 */
-    .container{max-width:var(--max-width); margin:0 auto; padding:18px;}
-    .card{background:var(--card); border-radius:12px; padding:28px; box-shadow:0 6px 18px rgba(16,24,40,0.06);}
-    .meta{display:flex; gap:12px; align-items:center; color:var(--muted); font-size:14px; margin-bottom:8px}
-    .meta .author{font-weight:600; color:var(--text)}
-    h1.article-title{font-size:26px;margin:0 0 8px}
-    .lead{color:var(--muted); margin-bottom:18px}
-    p{line-height:1.78; margin:12px 0; font-size:16px}
-    img.in-article{max-width:100%; border-radius:8px; display:block; margin:14px auto}
-    pre{background:#0b1220;color:#e6f2ff;padding:12px;border-radius:8px;overflow:auto}
+    /* 卡片内容 */
+    .card{
+      margin-top:-48px; /* 悬浮在图片下方 */
+      background:var(--card);
+      border-radius:calc(var(--radius) - 6px);
+      padding:28px;
+      box-shadow: var(--shadow);
+      position:relative;
+      z-index:40;
+    }
+    .meta{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+    .avatar{
+      width:44px;height:44px;border-radius:10px;overflow:hidden;
+      background:linear-gradient(135deg,#eef2ff,#f3f4ff);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);
+    }
+    .content{
+      margin-top:6px;
+      color:#111827;
+      font-size:16px;
+    }
+    .content p{margin:0 0 16px}
+    .content img{max-width:100%;border-radius:10px}
 
-    /* 小屏幕调整 */
+    .footer{
+      margin-top:20px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      border-top:1px dashed #eef2ff;
+      padding-top:14px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .links a{color:var(--accent); text-decoration:none; margin-right:10px; font-weight:600}
+
+    /* 微信图标与二维码弹窗 */
+    .wechat-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      user-select:none;
+      border-radius:10px;
+      padding:8px 12px;
+      background:linear-gradient(90deg, rgba(99,102,241,0.08), rgba(99,102,241,0.03));
+      border:1px solid rgba(99,102,241,0.08);
+      color:var(--accent);
+      font-weight:600;
+    }
+    .qr-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,0.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:80;
+      padding:24px;
+    }
+    .qr-modal.open{display:flex}
+    .qr-card{
+      background:var(--card);
+      padding:18px;
+      border-radius:12px;
+      box-shadow: 0 20px 50px rgba(2,6,23,0.5);
+      text-align:center;
+      max-width:360px;
+      width:100%;
+    }
+    .qr-card img{width:260px;height:260px;object-fit:contain;border-radius:8px}
+    .qr-close{
+      margin-top:12px;
+      display:inline-block;
+      font-size:13px;
+      color:var(--muted);
+      cursor:pointer;
+    }
+
+    /* 响应 */
     @media (max-width:640px){
-      .hero{border-radius:0;margin:0}
-      .container{padding:14px}
+      .hero{height:260px}
+      .title{font-size:24px}
       .card{padding:18px}
+      .avatar{width:40px;height:40px}
     }
-
-    /* 小工具栏（只是示例，不会在发布时显示） */
-    .note{max-width:var(--max-width); margin:12px auto; color:var(--muted); font-size:13px}
   </style>
 </head>
 <body>
 
-  <!--
-    使用说明：
-    1) 把下面 data-image 的值替换成你指定的图片 URL（可以是网络图片或相对路径）。
-    2) 把 data-title 替换成文章题目。
-    3) 把 article-content 区域内的 HTML 替换成你的文章内容（支持<p>, <h2>, <img>, <pre> 等）。
-  -->
+  <!-- 左上角返回按钮：修改 href="#" 为你要跳转的地址 -->
+  <a class="back-btn" href="#">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    返回
+  </a>
 
-  <div class="hero" id="hero" data-image="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3" data-title="2023 年前端开发最佳实践与技能优化技巧">
-    <img class="hero__img" id="heroImg" src="" alt="文章封面图" />
-    <div class="hero__overlay">
-      <div class="hero__title" id="heroTitle">示例文章标题 - 请替换</div>
-    </div>
-  </div>
+  <main class="container" role="main">
+    <!-- 顶部图片：把 background-image 的 URL 换成你的图片地址 -->
+    <section class="hero" id="hero" style="background-image: url('7aa5d81b477591b31c8340ec9d5231bd.png');">
+      <div class="hero-inner">
+        <h1 class="title" id="post-title">2023 年前端开发最佳实践与技能优化技巧</h1>
+      </div>
+    </section>
 
-  <div class="container">
-    <div class="card">
+    <article class="card" aria-labelledby="post-title">
       <div class="meta">
-        <div class="author">作者：杨效听</div>
-        <div>•</div>
-        <div class="date">2023-10-03</div>
-        <div>•</div>
-        <div class="reading-time">预计阅读时间10分钟</div>
+        <div class="avatar" id="author-avatar">W</div>
+        <div>
+          <div style="font-weight:700" id="author-name">文章作者：yangxt</div>
+          <div style="font-size:13px;color:var(--muted)" id="post-date">2025-10-07</div>
+        </div>
       </div>
 
-      <h1 class="article-title" id="articleTitle">文章副标题（可选）</h1>
-      <p class="lead" id="articleLead">在前端技术高速迭代的 2023 年，开发者不仅需要掌握新技术，更要建立系统化的开发思维，通过最佳实践提升项目质量与自身效率。以下从工程化、性能优化、用户体验、技能提升四个维度，分享经过行业验证的实践方案与优化技巧。</p>
+      <div class="content" id="post-content">
+      在前端技术高速迭代的 2023 年，开发者不仅需要掌握新技术，更要建立系统化的开发思维，通过最佳实践提升项目质量与自身效率。以下从工程化、性能优化、用户体验、技能提升四个维度，分享经过行业验证的实践方案与优化技巧。</p>
 
       <div id="article-content">
         <h2>一、工程化：构建高效协作体系</h2>
@@ -109,40 +227,77 @@
         <p>深耕核心技术而非追逐 “技术热点”。2023 年前端领域框架迭代放缓，React 18 的 Concurrent Mode、Vue 3 的 Composition API 已成为主流，开发者应深入理解其底层原理（如 React 的 Fiber 架构、Vue 的响应式原理），而非仅停留在 API 使用层面；同时，强化 JavaScript 基础（闭包、原型链、异步编程），掌握 TypeScript 类型系统（泛型、条件类型、映射类型），这些 “不变的底层能力” 是应对技术迭代的核心竞争力。
 建立系统化知识体系。通过 “项目复盘” 总结经验：每完成一个项目，梳理遇到的问题（如性能瓶颈、兼容性问题）、解决方案及优化空间，形成个人知识库；关注行业权威资源（如 MDN 文档、Google Web Dev、前端三大框架官方博客），定期阅读技术书籍（如《你不知道的 JavaScript》《高性能 JavaScript》），避免碎片化学习；此外，参与开源项目或撰写技术博客，将知识 “输出” 倒逼 “输入”，加速技能内化 —— 调查显示，坚持输出技术内容的开发者，技能成长速度比单纯学习的开发者快 2-3 倍。
 2023 年前端开发的竞争，本质是 “系统化能力” 的竞争。掌握工程化思维提升协作效率，通过性能优化与体验设计打造优质产品，再以持续学习构建长期竞争力，才能在技术浪潮中保持领先，实现从 “代码实现者” 到 “解决方案提供者” 的转变。</p>
-        <!--<pre><code>示例代码块：
-function hello(){
-  console.log('Hello World')
-}
-</code></pre>  -->
+
       </div>
+
+      <div class="footer">
+        <div>
+          <span style="font-weight:700" id="footer-author">版权声明: 本博客所有文章除特别声明外，均采用 CC BY-NC-SA 4.0 许可协议。转载请注明来自 效听的快乐日记！</span>
+          <span style="margin-left:10px;color:var(--muted)" id="footer-copyright">© 2025</span>
+        </div>
+        <div class="links">
+          <a id="link-original" href="#" target="_blank" rel="noopener">原文链接</a>
+          <span class="wechat-btn" id="wechat-open" role="button" aria-haspopup="dialog" aria-controls="qr-modal">
+            <!-- 微信SVG 图标 -->
+            <svg width="18" height="18" viewBox="0 0 1024 1024" fill="currentColor" aria-hidden="true"><path d="M512 64C264.6 64 64 246.5 64 464c0 96.8 43.8 185 117.6 250.2-2.6 28.6-18.2 93.3-27.6 131.2-5.6 23.3 6.3 37.5 28.2 37.5 8.7 0 17.8-1.8 26.9-5.4C281.6 910.9 389 960 512 960c247.4 0 448-182.5 448-400S759.4 64 512 64zM336 392c-25.4 0-46-20.6-46-46s20.6-46 46-46 46 20.6 46 46-20.6 46-46 46zm352 0c-25.4 0-46-20.6-46-46s20.6-46 46-46 46 20.6 46 46-20.6 46-46 46z"/></svg>
+            微信
+          </span>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <!-- 二维码弹窗（点击微信图标显示），将 img src="#" 替换为二维码图片地址 -->
+  <div class="qr-modal" id="qr-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="qr-card" role="document">
+      <h3 style="margin:0 0 12px 0">扫码关注 / 加我好友</h3>
+      <img id="qr-image" src="#" alt="微信二维码（请替换图片地址）" />
+      <div class="qr-close" id="qr-close">点击任意处或 ESC 关闭</div>
     </div>
-    <div class="note">文章作者: yangxt
-文章链接: https://toby215.github.io/myblog/index%20(15).html
-版权声明: 本博客所有文章除特别声明外，均采用 CC BY-NC-SA 4.0 许可协议。转载请注明来自 效听的快乐日记！</div>
   </div>
 
   <script>
-    // 用页面上的 data- 属性初始化封面图和标题，方便你只改一处
+    // 简单的交互：打开/关闭二维码弹窗
     (function(){
-      const hero = document.getElementById('hero')
-      const imgEl = document.getElementById('heroImg')
-      const titleEl = document.getElementById('heroTitle')
-      const articleTitleEl = document.getElementById('articleTitle')
-      const leadEl = document.getElementById('articleLead')
+      const wechatBtn = document.getElementById('wechat-open');
+      const qrModal = document.getElementById('qr-modal');
+      const qrClose = document.getElementById('qr-close');
 
-      const image = hero.getAttribute('data-image') || ''
-      const title = hero.getAttribute('data-title') || '在这里写标题'
+      function openQR(){
+        qrModal.classList.add('open');
+        qrModal.setAttribute('aria-hidden','false');
+      }
+      function closeQR(){
+        qrModal.classList.remove('open');
+        qrModal.setAttribute('aria-hidden','true');
+      }
 
-      if(image) imgEl.src = image
-      titleEl.textContent = title
-      articleTitleEl.textContent = title
+      wechatBtn.addEventListener('click', openQR);
+      qrModal.addEventListener('click', function(e){
+        // 点击模态背景或关闭文字均关闭
+        if (e.target === qrModal || e.target === qrClose) closeQR();
+      });
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') closeQR();
+      });
 
-      // 如果图片加载失败，降级显示深色背景
-      imgEl.addEventListener('error', ()=>{
-        imgEl.style.display = 'none'
-        hero.style.background = 'linear-gradient(180deg,#0f1724,#0b1220)'
-      })
-    })()
+      // 可选：如果希望点击图片不关闭（防止误触），阻止冒泡
+      document.getElementById('qr-image').addEventListener('click', function(e){
+        e.stopPropagation();
+      });
+
+      // ---- 可编程替换初始占位内容（可删除） ----
+      // 下面示例展示如何用 JS 直接替换占位内容。你也可以直接修改 HTML 中的文本或 src。
+      // document.getElementById('hero').style.backgroundImage = 'url("你的大图地址.jpg")';
+      // document.getElementById('post-title').textContent = '这是新的文章标题';
+      // document.getElementById('author-name').textContent = '王老师';
+      // document.getElementById('post-content').innerHTML = '<p>新的内容...</p>';
+      // document.getElementById('qr-image').src = '二维码图片地址.png';
+      // document.querySelector('.back-btn').href = 'https://example.com/return';
+      // document.getElementById('link-original').href = 'https://example.com/original';
+      // -------------------------------------------
+    })();
   </script>
 </body>
 </html>
+
